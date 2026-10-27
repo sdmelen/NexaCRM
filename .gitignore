@@ -9,4 +9,5 @@ data/
 *.db
 *.sqlite3
 ssh_creds.txt
+.secrets/
 
