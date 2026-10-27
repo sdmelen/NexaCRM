@@ -53,6 +53,7 @@ class AppConfig:
     max_user_questions: int
     max_question_chars: int
     max_answer_chars: int
+    daily_question_limit: int
 
     @property
     def index_available(self) -> bool:
@@ -74,7 +75,7 @@ def load_config() -> AppConfig:
         data_dir=data_dir,
         qdrant_path=data_dir / "qdrant",
         index_manifest_path=data_dir / "index_manifest.json",
-        tickets_path=data_dir / "tickets.sqlite3",
+        tickets_path=_project_path("TICKETS_PATH", "data/tickets.sqlite3"),
         api_key_available=bool(os.getenv("OPENAI_API_KEY", "").strip()),
         embedding_model=os.getenv("OPENAI_EMBEDDING_MODEL", "text-embedding-3-small"),
         query_model=os.getenv("OPENAI_QUERY_MODEL", "gpt-6-luna"),
@@ -88,5 +89,6 @@ def load_config() -> AppConfig:
         max_user_questions=_positive_int("MAX_USER_QUESTIONS", 15),
         max_question_chars=_positive_int("MAX_QUESTION_CHARS", 4000),
         max_answer_chars=_positive_int("MAX_ANSWER_CHARS", 2500),
+        daily_question_limit=_positive_int("DAILY_QUESTION_LIMIT", 100),
     )
 

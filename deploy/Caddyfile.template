@@ -1,0 +1,16 @@
+uai-dbezz.ru {
+    encode zstd gzip
+
+    redir /admin /admin/ 308
+
+    handle /admin/* {
+        basic_auth {
+            admin __ADMIN_PASSWORD_HASH__
+        }
+        reverse_proxy 127.0.0.1:8502
+    }
+
+    handle {
+        reverse_proxy 127.0.0.1:8501
+    }
+}
