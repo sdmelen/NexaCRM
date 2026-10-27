@@ -5,8 +5,9 @@ from __future__ import annotations
 import argparse
 import sys
 
-from openai import OpenAI, OpenAIError
+from openai import OpenAIError
 
+from nexacrm.api_client import create_api_client
 from nexacrm.chunking import chunk_corpus, token_count
 from nexacrm.config import ConfigError, load_config
 from nexacrm.corpus import CorpusError
@@ -36,8 +37,8 @@ def main() -> int:
             print("Embeddings не запрашивались; индекс не изменён.")
             return 0
         if not config.api_key_available:
-            raise IndexingError("OPENAI_API_KEY не задан в .env или окружении")
-        client = OpenAI(timeout=60.0, max_retries=2)
+            raise IndexingError("PROXY_API_KEY или OPENAI_API_KEY не задан в .env или окружении")
+        client = create_api_client(config, timeout=60.0)
 
         def embed_batch(texts: list[str]) -> list[list[float]]:
             try:
@@ -49,7 +50,7 @@ def main() -> int:
             except OpenAIError as exc:
                 status = getattr(exc, "status_code", None)
                 detail = f"HTTP {status}" if status else type(exc).__name__
-                raise IndexingError(f"Ошибка OpenAI Embeddings API ({detail})") from None
+                raise IndexingError(f"Ошибка Embeddings API ({detail})") from None
             ordered: list[list[float] | None] = [None] * len(texts)
             for item in response.data:
                 if not 0 <= item.index < len(texts) or ordered[item.index] is not None:

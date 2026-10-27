@@ -1,0 +1,10 @@
+[Unit]
+Description=Backup NexaCRM SQLite data
+
+[Service]
+Type=oneshot
+User=nexacrm
+Group=nexacrm
+WorkingDirectory=/srv/nexacrm/current
+EnvironmentFile=/etc/nexacrm/production.env
+ExecStart=/srv/nexacrm/current/.venv/bin/python deploy/backup_sqlite.py

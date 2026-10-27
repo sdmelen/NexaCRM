@@ -4,8 +4,9 @@ from __future__ import annotations
 
 import json
 
-from openai import OpenAI, OpenAIError
+from openai import OpenAIError
 
+from nexacrm.api_client import create_api_client
 from nexacrm.config import AppConfig
 from nexacrm.retrieval import RetrievalError
 
@@ -13,9 +14,9 @@ from nexacrm.retrieval import RetrievalError
 class OpenAIRetrievalProvider:
     def __init__(self, config: AppConfig):
         if not config.api_key_available:
-            raise RetrievalError("OPENAI_API_KEY не задан в .env или окружении")
+            raise RetrievalError("PROXY_API_KEY или OPENAI_API_KEY не задан в .env или окружении")
         self.config = config
-        self.client = OpenAI(timeout=60.0, max_retries=2)
+        self.client = create_api_client(config, timeout=60.0)
 
     def embed(self, query: str) -> list[float]:
         try:
@@ -25,7 +26,7 @@ class OpenAIRetrievalProvider:
         except OpenAIError as exc:
             status = getattr(exc, "status_code", None)
             detail = f"HTTP {status}" if status else type(exc).__name__
-            raise RetrievalError(f"Ошибка OpenAI Embeddings API ({detail})") from None
+            raise RetrievalError(f"Ошибка Embeddings API ({detail})") from None
         if len(response.data) != 1 or response.data[0].index != 0:
             raise RetrievalError("Embeddings API вернул неверный результат для запроса")
         return response.data[0].embedding

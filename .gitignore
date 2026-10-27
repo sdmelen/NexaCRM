@@ -1,5 +1,6 @@
 .env
 .venv/
+.ci-venv/
 __pycache__/
 *.py[cod]
 .pytest_cache/
@@ -7,4 +8,6 @@ __pycache__/
 data/
 *.db
 *.sqlite3
+ssh_creds.txt
+.secrets/
 

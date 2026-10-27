@@ -1,0 +1,21 @@
+[project]
+name = "nexacrm-support-ai"
+version = "0.1.0"
+description = "NexaCRM support demo"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "streamlit>=1.38,<2",
+    "openai>=2,<3",
+    "qdrant-client>=1.10,<2",
+    "rank-bm25>=0.2.2,<1",
+    "python-dotenv>=1,<2",
+    "PyYAML>=6,<7",
+    "tiktoken>=0.7,<1",
+    "tzdata>=2025,<2027",
+]
+
+[dependency-groups]
+dev = ["pytest>=8,<10"]
+
+[tool.uv]
+package = false

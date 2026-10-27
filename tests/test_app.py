@@ -9,7 +9,7 @@ from nexacrm.knowledge_base import IndexStatus
 from nexacrm.llm import AnswerError, GroundedAnswer, Source
 
 
-def test_shell_shows_corpus_and_both_pages(monkeypatch, tmp_path) -> None:
+def test_public_shell_shows_corpus_without_ticket_list(monkeypatch, tmp_path) -> None:
     import nexacrm.config
 
     config = replace(load_config(), tickets_path=tmp_path / "tickets.sqlite3")
@@ -22,9 +22,8 @@ def test_shell_shows_corpus_and_both_pages(monkeypatch, tmp_path) -> None:
     assert any(item.label == "Индекс знаний" for item in app.metric)
     assert any("Индекс" in item.value for item in [*app.warning, *app.success])
 
-    app.sidebar.radio[0].set_value("Заявки").run()
-    assert not app.exception
-    assert [item.value for item in app.title] == ["Заявки"]
+    assert not app.sidebar.radio
+    assert not app.selectbox
     assert not config.tickets_path.exists()
 
 
@@ -110,7 +109,7 @@ def test_chat_error_keeps_question_for_retry_without_showing_internal_detail(mon
     assert not any("internal detail" in item.value for item in app.error)
 
 
-def test_explicit_ticket_requires_confirmation_and_survives_new_session(monkeypatch, tmp_path) -> None:
+def test_explicit_ticket_requires_confirmation_and_appears_only_in_admin(monkeypatch, tmp_path) -> None:
     import nexacrm.config
 
     config = replace(load_config(), tickets_path=tmp_path / "tickets.sqlite3")
@@ -130,11 +129,13 @@ def test_explicit_ticket_requires_confirmation_and_survives_new_session(monkeypa
     assert app.session_state["ticket_draft"] is None
     assert any("Заявка №1 сохранена" in item.value for item in app.success)
 
-    fresh = AppTest.from_file(app_path, default_timeout=15).run()
-    fresh.sidebar.radio[0].set_value("Заявки").run()
-    assert not fresh.exception
-    assert fresh.selectbox[0].value == 1
-    assert any("Не удаётся войти в CRM" in item.value for item in fresh.markdown)
+    fresh_public = AppTest.from_file(app_path, default_timeout=15).run()
+    assert not fresh_public.selectbox
+    assert not any("Не удаётся войти в CRM" in item.value for item in fresh_public.markdown)
+    admin = AppTest.from_file(app_path.with_name("admin.py"), default_timeout=15).run()
+    assert not admin.exception
+    assert admin.selectbox[0].value == 1
+    assert any("Не удаётся войти в CRM" in item.value for item in admin.markdown)
 
 
 def test_fifteenth_question_gets_answer_then_opens_session_ticket(monkeypatch, tmp_path) -> None:
@@ -173,7 +174,8 @@ def test_fifteenth_question_gets_answer_then_opens_session_ticket(monkeypatch, t
     assert app.chat_input[0].disabled
     assert any("Последний ответ" in item.value for item in app.markdown)
     assert app.session_state["ticket_draft"]["reason"] == "session_limit"
-    assert not config.tickets_path.exists()
+    from nexacrm.tickets import list_tickets
+    assert not list_tickets(config.tickets_path)
 
     next(item for item in app.button if item.label == "Отменить черновик").click().run()
     assert app.session_state["ticket_draft"] is None
@@ -212,7 +214,7 @@ def test_unanswered_question_prefills_ticket_with_conversation(monkeypatch, tmp_
 
     assert app.session_state["ticket_draft"]["reason"] == "insufficient_information"
     assert app.text_input[0].value == "Как включить видеоредактор?"
-    assert not config.tickets_path.exists()
+    assert not list_tickets(config.tickets_path)
 
     app.form_submit_button[0].click().run()
     tickets = list_tickets(config.tickets_path)

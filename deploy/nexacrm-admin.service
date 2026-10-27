@@ -1,0 +1,19 @@
+[Unit]
+Description=NexaCRM admin tickets
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=nexacrm
+Group=nexacrm
+WorkingDirectory=/srv/nexacrm/current
+EnvironmentFile=/etc/nexacrm/production.env
+ExecStart=/srv/nexacrm/current/.venv/bin/streamlit run admin.py --server.address=127.0.0.1 --server.port=8502 --server.baseUrlPath=admin --server.headless=true --browser.gatherUsageStats=false
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
