@@ -32,6 +32,13 @@ def _project_path(name: str, default: str) -> Path:
     return (value if value.is_absolute() else PROJECT_ROOT / value).resolve()
 
 
+def _model_name(name: str, default: str, provider: str) -> str:
+    value = os.getenv(name, default)
+    if provider == "proxyapi" and "/" not in value:
+        return f"openai/{value}"
+    return value
+
+
 @dataclass(frozen=True)
 class AppConfig:
     project_root: Path
@@ -40,6 +47,7 @@ class AppConfig:
     qdrant_path: Path
     index_manifest_path: Path
     tickets_path: Path
+    api_provider: str
     api_key_available: bool
     embedding_model: str
     query_model: str
@@ -69,6 +77,7 @@ def load_config() -> AppConfig:
     overlap = _positive_int("CHUNK_OVERLAP_TOKENS", 60)
     if overlap >= target:
         raise ConfigError("CHUNK_OVERLAP_TOKENS должно быть меньше CHUNK_TARGET_TOKENS")
+    provider = "proxyapi" if os.getenv("PROXY_API_KEY", "").strip() else "openai"
     return AppConfig(
         project_root=PROJECT_ROOT,
         source_dir=source_dir,
@@ -76,10 +85,11 @@ def load_config() -> AppConfig:
         qdrant_path=data_dir / "qdrant",
         index_manifest_path=data_dir / "index_manifest.json",
         tickets_path=_project_path("TICKETS_PATH", "data/tickets.sqlite3"),
-        api_key_available=bool(os.getenv("OPENAI_API_KEY", "").strip()),
-        embedding_model=os.getenv("OPENAI_EMBEDDING_MODEL", "text-embedding-3-small"),
-        query_model=os.getenv("OPENAI_QUERY_MODEL", "gpt-6-luna"),
-        answer_model=os.getenv("OPENAI_ANSWER_MODEL", "gpt-6.1-sol"),
+        api_provider=provider,
+        api_key_available=bool(os.getenv("PROXY_API_KEY" if provider == "proxyapi" else "OPENAI_API_KEY", "").strip()),
+        embedding_model=_model_name("OPENAI_EMBEDDING_MODEL", "text-embedding-3-small", provider),
+        query_model=_model_name("OPENAI_QUERY_MODEL", "gpt-6-luna", provider),
+        answer_model=_model_name("OPENAI_ANSWER_MODEL", "gpt-6.1-sol", provider),
         chunk_target_tokens=target,
         chunk_overlap_tokens=overlap,
         semantic_top_k=_positive_int("SEMANTIC_TOP_K", 8),

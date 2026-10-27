@@ -90,11 +90,11 @@ middle.metric("API-ключ", "добавлен" if config.api_key_available els
 right.metric("Индекс знаний", "готов" if index_status.ready else "не готов")
 
 if not config.api_key_available:
-    st.info("Для ответов добавьте OPENAI_API_KEY в файл .env. Значение ключа здесь не отображается.")
+    st.info("Для ответов добавьте PROXY_API_KEY в файл .env. Значение ключа здесь не отображается.")
 if not index_status.ready:
-    st.warning(f"{index_status.message} Для создания выполните `python ingest.py`.")
+    st.warning(f"Индекс знаний: {index_status.message} Для создания выполните `python ingest.py`.")
 elif index_status.stale:
-    st.warning(index_status.message)
+    st.warning(f"Индекс знаний: {index_status.message}")
 else:
     st.success(
         f"Индекс содержит {index_status.document_count} документов и "

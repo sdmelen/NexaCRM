@@ -6,9 +6,10 @@ import json
 from dataclasses import dataclass
 from typing import Callable
 
-from openai import OpenAI, OpenAIError
+from openai import OpenAIError
 from pydantic import BaseModel, ConfigDict
 
+from nexacrm.api_client import create_api_client
 from nexacrm.config import AppConfig
 from nexacrm.retrieval import IndexedChunk, RetrievalResult
 
@@ -104,7 +105,7 @@ def build_answer(
     except OpenAIError as exc:
         status = getattr(exc, "status_code", None)
         detail = f"HTTP {status}" if status else type(exc).__name__
-        raise AnswerError(f"Ошибка OpenAI Responses API ({detail})") from None
+        raise AnswerError(f"Ошибка Responses API ({detail})") from None
     if not isinstance(draft, AnswerDraft):
         raise AnswerError("Модель вернула ответ неверного формата")
     if not draft.is_answerable:
@@ -126,9 +127,9 @@ def build_answer(
 class OpenAIAnswerProvider:
     def __init__(self, config: AppConfig):
         if not config.api_key_available:
-            raise AnswerError("OPENAI_API_KEY не задан в .env или окружении")
+            raise AnswerError("PROXY_API_KEY или OPENAI_API_KEY не задан в .env или окружении")
         self.config = config
-        self.client = OpenAI(timeout=90.0, max_retries=2)
+        self.client = create_api_client(config, timeout=90.0)
 
     def respond(
         self, question: str, history: list[dict[str, str]], chunks: tuple[IndexedChunk, ...]
@@ -166,7 +167,7 @@ class OpenAIAnswerProvider:
         except OpenAIError as exc:
             status = getattr(exc, "status_code", None)
             detail = f"HTTP {status}" if status else type(exc).__name__
-            raise AnswerError(f"Ошибка OpenAI Responses API ({detail})") from None
+            raise AnswerError(f"Ошибка Responses API ({detail})") from None
         except Exception as exc:
             raise AnswerError(f"Не удалось разобрать структурированный ответ ({type(exc).__name__})") from None
         if response.output_parsed is None:

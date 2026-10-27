@@ -11,7 +11,7 @@ uv sync --locked
 if (-not (Test-Path .env)) { Copy-Item .env.example .env }
 ```
 
-Заполните `OPENAI_API_KEY` в `.env`, затем:
+Заполните `PROXY_API_KEY` в `.env`, затем:
 
 ```powershell
 uv run python ingest.py --dry-run
@@ -31,7 +31,7 @@ uv run python ingest.py --dry-run
 uv run python -m nexacrm.eval_cases
 ```
 
-`--dry-run` не вызывает OpenAI и не меняет индекс. Индексация передаёт тексты документации в OpenAI Embeddings API. Публичный чат передаёт вопрос, историю и найденные фрагменты в OpenAI. Повторные попытки после ошибки тоже входят в общий лимит 100 принятых вопросов за календарные сутки по московскому времени: это ограничивает возможные расходы.
+`--dry-run` не вызывает API и не меняет индекс. Production использует [ProxyAPI](https://proxyapi.ru/docs/quickstart): индексация передаёт тексты документации в embeddings API, а чат — вопрос, историю и найденные фрагменты в Responses API. `PROXY_API_KEY` имеет приоритет над `OPENAI_API_KEY`; для моделей OpenAI короткие имена из `OPENAI_*_MODEL` автоматически получают префикс `openai/`. Повторные попытки после ошибки тоже входят в общий лимит 100 принятых вопросов за календарные сутки по московскому времени: это ограничивает возможные расходы.
 
 ## Production: uai-dbezz.ru
 
@@ -39,13 +39,13 @@ uv run python -m nexacrm.eval_cases
 - `https://uai-dbezz.ru/admin/` — отдельный процесс на `127.0.0.1:8502`; Caddy требует пароль на всём маршруте, включая WebSocket.
 - `/srv/nexacrm/releases/<SHA>` — неизменяемые выпуски с отдельным индексом Qdrant; `/srv/nexacrm/current` указывает на активный выпуск.
 - `/srv/nexacrm/shared/tickets.sqlite3` — общая SQLite-база заявок и суточного лимита; `/srv/nexacrm/backups` — семь ежедневных копий.
-- `/etc/nexacrm/production.env` содержит API-ключ и настройки, `/etc/nexacrm/admin.hash` — хеш пароля. Эти файлы не попадают в Git.
+- `/etc/nexacrm/production.env` содержит `PROXY_API_KEY` и настройки, `/etc/nexacrm/admin.hash` — хеш пароля. Эти файлы не попадают в Git.
 
 ### Первый запуск сервера
 
 1. Через консоль Timeweb проверьте SSH-отпечаток командой `ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key.pub`. Сравните с отпечатком, полученным с локальной машины, **до** передачи root-пароля. Проверьте `cat /etc/os-release`, `free -h`, `df -h /`, наличие systemd и свободные порты 80/443.
 2. Загрузите каталог `deploy/` на сервер и запустите `bootstrap.sh --prepare` от root из корня проекта. Он установит uv и Caddy из официальных источников, создаст пользователя `nexacrm` и каталоги данных.
-3. Установите на сервере `/etc/nexacrm/production.env` с содержимым `OPENAI_API_KEY=<текущий ключ>`, `TICKETS_PATH=/srv/nexacrm/shared/tickets.sqlite3`, `DAILY_QUESTION_LIMIT=100`. Создайте отдельный сильный пароль администратора, получите его хеш через `caddy hash-password` и сохраните хеш в `/etc/nexacrm/admin.hash`. Запустите `bootstrap.sh` без аргументов: он установит сервисы и выставит права на секреты. Пароль передайте владельцу отдельно от Git. Существующий вход root по паролю сохранится.
+3. Установите на сервере `/etc/nexacrm/production.env` с содержимым `PROXY_API_KEY=<ключ ProxyAPI>`, `TICKETS_PATH=/srv/nexacrm/shared/tickets.sqlite3`, `DAILY_QUESTION_LIMIT=100`. Ключ OpenAI напрямую с этого сервера не используется: его IP определяется как РФ, а OpenAI API возвращает `unsupported_country_region_territory`. Создайте отдельный сильный пароль администратора, получите его хеш через `caddy hash-password` и сохраните хеш в `/etc/nexacrm/admin.hash`. Запустите `bootstrap.sh` без аргументов: он установит сервисы и выставит права на секреты. Пароль передайте владельцу отдельно от Git. Существующий вход root по паролю сохранится.
 4. Создайте отдельный ключ Ed25519 для GitHub Actions и добавьте его открытую часть в `/home/nexacrm/.ssh/authorized_keys`. В репозитории GitHub → Settings → Secrets and variables → Actions добавьте три repository secrets: `DEPLOY_HOST` (IPv4 сервера), `DEPLOY_SSH_KEY` (закрытый ключ), `DEPLOY_KNOWN_HOSTS` (проверенная строка host key). Не копируйте локальный `.env` или `ssh_creds.txt` в репозиторий.
 5. После настройки DNS и секретов влейте подготовленный PR в `master`. Workflow `.github/workflows/deploy.yml` проверит тесты и сухую индексацию, затем передаст серверу SHA коммита. Скрипт `deploy/deploy.sh` скачает именно его, создаст индекс, переключит выпуск и проверит оба процесса. При неуспехе он восстановит предыдущий выпуск и пометит workflow ошибкой.
 
