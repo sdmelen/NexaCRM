@@ -1,0 +1,233 @@
+{
+  "OV-01": {
+    "answer_and_sources_sha256": "db893b4be509c6832d20102e27a8803b15be1bfca903db9d357f26a90f0458ba",
+    "expected_facts_met": true,
+    "all_substantial_claims_supported": true,
+    "expected_behavior_met": true,
+    "notes": ""
+  },
+  "GS-01": {
+    "answer_and_sources_sha256": "e173e9afd3975a2b8327694e1d06265ed4175abed33d51921edf6fba1ce3baf1",
+    "expected_facts_met": true,
+    "all_substantial_claims_supported": true,
+    "expected_behavior_met": true,
+    "notes": ""
+  },
+  "CO-01": {
+    "answer_and_sources_sha256": "5d1bcb39c5323baac99e56d7f2ab3f5d5b69d9e2f6dca0a1bf9f3d71a044e1b4",
+    "expected_facts_met": true,
+    "all_substantial_claims_supported": true,
+    "expected_behavior_met": true,
+    "notes": ""
+  },
+  "IM-01": {
+    "answer_and_sources_sha256": "d4226a58ce67dc4313944782ec9788cc88bfe70998ae9c05f282248ff6c71243",
+    "expected_facts_met": true,
+    "all_substantial_claims_supported": true,
+    "expected_behavior_met": true,
+    "notes": ""
+  },
+  "EX-01": {
+    "answer_and_sources_sha256": "ac8ce862dc4455f7125b8b3fd96f995a9361b5e0eec6ac3211ed595bd22f76bf",
+    "expected_facts_met": true,
+    "all_substantial_claims_supported": true,
+    "expected_behavior_met": true,
+    "notes": ""
+  },
+  "DE-01": {
+    "answer_and_sources_sha256": "900f6829eed526f4aeb976cc32000967c509ffe68a64c3187b4540863c621e3b",
+    "expected_facts_met": true,
+    "all_substantial_claims_supported": true,
+    "expected_behavior_met": true,
+    "notes": ""
+  },
+  "RO-01": {
+    "answer_and_sources_sha256": "0aaa765ae1301d2f953bef3f30612447e28e0ae024cd4ec86b649ef0243cc7b6",
+    "expected_facts_met": false,
+    "all_substantial_claims_supported": true,
+    "expected_behavior_met": true,
+    "notes": "Ответ не уточняет, что наблюдатель читает назначенные и общие записи."
+  },
+  "AU-01": {
+    "answer_and_sources_sha256": "01f699d45058718e047e377d7d42643a49987c04cd14a4d3484fa1f4cac676ae",
+    "expected_facts_met": true,
+    "all_substantial_claims_supported": true,
+    "expected_behavior_met": true,
+    "notes": ""
+  },
+  "AT-01": {
+    "answer_and_sources_sha256": "90f5c4b8e66c58b0a58843df5d8523e2ef6fbce899adc06a885cb00ae98b9d90",
+    "expected_facts_met": true,
+    "all_substantial_claims_supported": true,
+    "expected_behavior_met": true,
+    "notes": ""
+  },
+  "IN-01": {
+    "answer_and_sources_sha256": "d60da40fccba4790e410b3b8a4342ff27e1b82d67c122e556d7f6176398903a0",
+    "expected_facts_met": true,
+    "all_substantial_claims_supported": true,
+    "expected_behavior_met": true,
+    "notes": ""
+  },
+  "API-01": {
+    "answer_and_sources_sha256": "d86059f6fc4a513177cea13fcf0ae17991dbd65385b178590e4465c3c34716a4",
+    "expected_facts_met": true,
+    "all_substantial_claims_supported": true,
+    "expected_behavior_met": true,
+    "notes": ""
+  },
+  "PR-01": {
+    "answer_and_sources_sha256": "73128a81830cc42d24e82542dee58b730ef63563fe9be6528d316e75a9883ec6",
+    "expected_facts_met": true,
+    "all_substantial_claims_supported": true,
+    "expected_behavior_met": true,
+    "notes": ""
+  },
+  "ER-01": {
+    "answer_and_sources_sha256": "f21f46fdc3f8e6154d0ae741154895f4573b66e57fa2a5510ed8fb69b811383a",
+    "expected_facts_met": true,
+    "all_substantial_claims_supported": true,
+    "expected_behavior_met": true,
+    "notes": ""
+  },
+  "SE-01": {
+    "answer_and_sources_sha256": "07d77e9733ac957a4bae81525757e841d829246f712d711e50f92cf1ca07b7a7",
+    "expected_facts_met": true,
+    "all_substantial_claims_supported": true,
+    "expected_behavior_met": true,
+    "notes": ""
+  },
+  "FAQ-01": {
+    "answer_and_sources_sha256": "1dc5afb202cb04b33da0dc2b9c965aee88a4a26d5f07475706313e8457ab8ce7",
+    "expected_facts_met": true,
+    "all_substantial_claims_supported": true,
+    "expected_behavior_met": true,
+    "notes": ""
+  },
+  "EXACT-01": {
+    "answer_and_sources_sha256": "9fdde1126586a9627c174e19b2ae7d21722b04f76a43c616399572e4296fd2f2",
+    "expected_facts_met": true,
+    "all_substantial_claims_supported": true,
+    "expected_behavior_met": true,
+    "notes": ""
+  },
+  "EXACT-02": {
+    "answer_and_sources_sha256": "e4f71140b8649dd1215401a8ab36efde9102add026cb818154df10d3aa149db6",
+    "expected_facts_met": true,
+    "all_substantial_claims_supported": true,
+    "expected_behavior_met": true,
+    "notes": ""
+  },
+  "EXACT-03": {
+    "answer_and_sources_sha256": "19b82b7e4abd4de10daf435f62355f0e733ab8e6e7f7f861d65f08efc52cd520",
+    "expected_facts_met": true,
+    "all_substantial_claims_supported": true,
+    "expected_behavior_met": true,
+    "notes": ""
+  },
+  "EXACT-04": {
+    "answer_and_sources_sha256": "3c6a7a23fbc69d0c9cd65a83360ee082d46f5396dbc59255a2796178df90db19",
+    "expected_facts_met": true,
+    "all_substantial_claims_supported": true,
+    "expected_behavior_met": true,
+    "notes": ""
+  },
+  "MULTI-01": {
+    "answer_and_sources_sha256": "39d46ce698825f65fbf356bfa8582945f6da80c046c352a9920c1aec7c378211",
+    "expected_facts_met": true,
+    "all_substantial_claims_supported": true,
+    "expected_behavior_met": true,
+    "notes": ""
+  },
+  "MULTI-02": {
+    "answer_and_sources_sha256": "1765ab915fcaeb31c27ae79ed4cc36248fd7e9f7f1e0045c4dd319c043f8f066",
+    "expected_facts_met": true,
+    "all_substantial_claims_supported": true,
+    "expected_behavior_met": true,
+    "notes": ""
+  },
+  "MULTI-03": {
+    "answer_and_sources_sha256": "96c30c2bb41093df68dd32c826665213da3faa0ea4b3fa2c7f0f96fca83e4aab",
+    "expected_facts_met": true,
+    "all_substantial_claims_supported": true,
+    "expected_behavior_met": true,
+    "notes": ""
+  },
+  "MULTI-04": {
+    "answer_and_sources_sha256": "83deebd8cff79361307bed11870af2b7fb521f23e05e83722ff2605b747a5158",
+    "expected_facts_met": true,
+    "all_substantial_claims_supported": true,
+    "expected_behavior_met": true,
+    "notes": ""
+  },
+  "FOLLOW-01": {
+    "answer_and_sources_sha256": "69c7ac87c7103fe9e96a2107f9f8215c394c68b2b83cb834d4c8929a89ccdd81",
+    "expected_facts_met": true,
+    "all_substantial_claims_supported": true,
+    "expected_behavior_met": true,
+    "notes": ""
+  },
+  "FOLLOW-02": {
+    "answer_and_sources_sha256": "b2b9a08468240aadacfdd78453106496da9ace5f341d30467ff017347051ae36",
+    "expected_facts_met": true,
+    "all_substantial_claims_supported": true,
+    "expected_behavior_met": true,
+    "notes": ""
+  },
+  "FOLLOW-03": {
+    "answer_and_sources_sha256": "6f64de4cf2797deaf5b1e466f1a57c70041807cf0c11c11259a83ea6bf39e03f",
+    "expected_facts_met": true,
+    "all_substantial_claims_supported": true,
+    "expected_behavior_met": true,
+    "notes": ""
+  },
+  "FOLLOW-04": {
+    "answer_and_sources_sha256": "5cdc39bf78b1ccce0f5d6b82b2f7f61318398e8155c4df606ede61fd586e5fa8",
+    "expected_facts_met": true,
+    "all_substantial_claims_supported": true,
+    "expected_behavior_met": true,
+    "notes": ""
+  },
+  "NO-01": {
+    "answer_and_sources_sha256": "31b8e8d2b2c2866ecec9fc75fc0a711a494fdc8931347a33a431dea442355d50",
+    "expected_facts_met": null,
+    "all_substantial_claims_supported": true,
+    "expected_behavior_met": true,
+    "notes": ""
+  },
+  "NO-02": {
+    "answer_and_sources_sha256": "31b8e8d2b2c2866ecec9fc75fc0a711a494fdc8931347a33a431dea442355d50",
+    "expected_facts_met": null,
+    "all_substantial_claims_supported": true,
+    "expected_behavior_met": true,
+    "notes": ""
+  },
+  "NO-03": {
+    "answer_and_sources_sha256": "31b8e8d2b2c2866ecec9fc75fc0a711a494fdc8931347a33a431dea442355d50",
+    "expected_facts_met": null,
+    "all_substantial_claims_supported": true,
+    "expected_behavior_met": true,
+    "notes": ""
+  },
+  "NO-04": {
+    "answer_and_sources_sha256": "31b8e8d2b2c2866ecec9fc75fc0a711a494fdc8931347a33a431dea442355d50",
+    "expected_facts_met": null,
+    "all_substantial_claims_supported": true,
+    "expected_behavior_met": true,
+    "notes": ""
+  },
+  "FLOW-01": {
+    "answer_and_sources_sha256": "31b8e8d2b2c2866ecec9fc75fc0a711a494fdc8931347a33a431dea442355d50",
+    "expected_facts_met": null,
+    "all_substantial_claims_supported": true,
+    "expected_behavior_met": false,
+    "notes": "Создание заявки и подтверждение запланированы на итерацию 5."
+  },
+  "FLOW-02": {
+    "answer_and_sources_sha256": "7a910e98ce4e82dc48b9bbfee5c908914736709d88cec3c96ae27794112e01e3",
+    "expected_facts_met": true,
+    "all_substantial_claims_supported": true,
+    "expected_behavior_met": false,
+    "notes": "Ответ на 15-й вопрос дан; подтверждение заявки запланировано на итерацию 5."
+  }
+}
