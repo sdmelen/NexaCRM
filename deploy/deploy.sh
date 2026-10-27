@@ -20,6 +20,13 @@ exec 9>"$root/deploy.lock"
 flock 9
 repository="$root/repo.git"
 release="$root/releases/$sha"
+healthy() {
+    curl --fail --silent --output /dev/null http://127.0.0.1:8501/_stcore/health &&
+    curl --fail --silent --output /dev/null http://127.0.0.1:8502/admin/_stcore/health &&
+    curl --fail --silent --output /dev/null --resolve uai-dbezz.ru:443:127.0.0.1 https://uai-dbezz.ru/ &&
+    [[ "$(curl --silent --output /dev/null --write-out '%{http_code}' \
+        --resolve uai-dbezz.ru:443:127.0.0.1 https://uai-dbezz.ru/admin/)" == 401 ]]
+}
 if [[ ! -d "$repository" ]]; then
     git clone --bare https://github.com/sdmelen/NexaCRM.git "$repository"
 fi
@@ -28,6 +35,15 @@ latest="$(git --git-dir="$repository" rev-parse FETCH_HEAD)"
 if [[ "$latest" != "$sha" ]]; then
     echo "SKIPPED: master moved from $sha to $latest"
     exit 0
+fi
+if [[ -L "$root/current" && "$(readlink -f "$root/current")" == "$release" ]]; then
+    if healthy; then
+        echo "PREVIOUS_SHA: $sha"
+        echo "ALREADY_DEPLOYED: $sha"
+        exit 0
+    fi
+    echo "Current release is unhealthy; rerun will not rebuild an in-use index" >&2
+    exit 1
 fi
 if [[ ! -d "$release" ]]; then
     git --git-dir="$repository" worktree add --detach "$release" "$sha"
@@ -83,11 +99,7 @@ mv -Tf "$root/current.next" "$root/current"
 sudo systemctl restart nexacrm-public.service
 sudo systemctl restart nexacrm-admin.service
 for attempt in $(seq 1 30); do
-    if curl --fail --silent --output /dev/null http://127.0.0.1:8501/_stcore/health &&
-       curl --fail --silent --output /dev/null http://127.0.0.1:8502/admin/_stcore/health &&
-       curl --fail --silent --output /dev/null --resolve uai-dbezz.ru:443:127.0.0.1 https://uai-dbezz.ru/ &&
-       [[ "$(curl --silent --output /dev/null --write-out '%{http_code}' \
-           --resolve uai-dbezz.ru:443:127.0.0.1 https://uai-dbezz.ru/admin/)" == 401 ]]; then
+    if healthy; then
         trap - ERR
         echo "DEPLOYED: $sha"
         exit 0
