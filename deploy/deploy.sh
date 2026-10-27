@@ -57,6 +57,11 @@ previous=""
 if [[ -L "$root/current" ]]; then
     previous="$(readlink -f "$root/current")"
 fi
+if [[ -n "$previous" ]]; then
+    echo "PREVIOUS_SHA: ${previous##*/}"
+else
+    echo "PREVIOUS_SHA: NONE"
+fi
 rollback() {
     trap - ERR
     if [[ -n "$previous" ]]; then
@@ -64,6 +69,10 @@ rollback() {
         mv -Tf "$root/current.next" "$root/current"
         sudo systemctl restart nexacrm-public.service
         sudo systemctl restart nexacrm-admin.service
+    else
+        rm -f "$root/current"
+        sudo systemctl stop nexacrm-public.service
+        sudo systemctl stop nexacrm-admin.service
     fi
     echo "Deployment failed; previous release restored" >&2
 }
@@ -75,7 +84,10 @@ sudo systemctl restart nexacrm-public.service
 sudo systemctl restart nexacrm-admin.service
 for attempt in $(seq 1 30); do
     if curl --fail --silent --output /dev/null http://127.0.0.1:8501/_stcore/health &&
-       curl --fail --silent --output /dev/null http://127.0.0.1:8502/admin/_stcore/health; then
+       curl --fail --silent --output /dev/null http://127.0.0.1:8502/admin/_stcore/health &&
+       curl --fail --silent --output /dev/null --resolve uai-dbezz.ru:443:127.0.0.1 https://uai-dbezz.ru/ &&
+       [[ "$(curl --silent --output /dev/null --write-out '%{http_code}' \
+           --resolve uai-dbezz.ru:443:127.0.0.1 https://uai-dbezz.ru/admin/)" == 401 ]]; then
         trap - ERR
         echo "DEPLOYED: $sha"
         exit 0

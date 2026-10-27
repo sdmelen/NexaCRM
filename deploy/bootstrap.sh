@@ -46,8 +46,8 @@ chown root:root /etc/nexacrm/admin.hash
 chmod 0600 /etc/nexacrm/admin.hash
 
 systemctl_path="$(command -v systemctl)"
-printf 'nexacrm ALL=(root) NOPASSWD: %s restart nexacrm-public.service, %s restart nexacrm-admin.service\n' \
-    "$systemctl_path" "$systemctl_path" >/etc/sudoers.d/nexacrm-deploy
+printf 'nexacrm ALL=(root) NOPASSWD: %s restart nexacrm-public.service, %s restart nexacrm-admin.service, %s stop nexacrm-public.service, %s stop nexacrm-admin.service\n' \
+    "$systemctl_path" "$systemctl_path" "$systemctl_path" "$systemctl_path" >/etc/sudoers.d/nexacrm-deploy
 chmod 0440 /etc/sudoers.d/nexacrm-deploy
 visudo -cf /etc/sudoers.d/nexacrm-deploy
 

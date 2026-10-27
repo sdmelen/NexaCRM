@@ -57,6 +57,9 @@ jobs:
             echo "deployed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
+          previous_sha="$(printf '%s\n' "$result" | sed -n 's/^PREVIOUS_SHA: //p' | tail -n 1)"
+          test "$previous_sha" = NONE || [[ "$previous_sha" =~ ^[0-9a-f]{40}$ ]]
+          echo "previous_sha=$previous_sha" >> "$GITHUB_OUTPUT"
           remote_sha="$(ssh -i "$HOME/.ssh/id_ed25519" -o IdentitiesOnly=yes \
             -o StrictHostKeyChecking=yes "nexacrm@$DEPLOY_HOST" \
             'git -C /srv/nexacrm/current rev-parse HEAD')"
@@ -75,3 +78,11 @@ jobs:
           admin_status="$(curl --silent --show-error --output /dev/null \
             --write-out '%{http_code}' https://uai-dbezz.ru/admin/)"
           test "$admin_status" = 401
+      - name: Roll back when public verification fails
+        if: failure() && steps.deploy.outputs.deployed == 'true'
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          PREVIOUS_SHA: ${{ steps.deploy.outputs.previous_sha }}
+        run: |
+          ssh -i "$HOME/.ssh/id_ed25519" -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes \
+            "nexacrm@$DEPLOY_HOST" bash -s -- "$GITHUB_SHA" "$PREVIOUS_SHA" < deploy/rollback.sh
